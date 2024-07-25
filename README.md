@@ -67,7 +67,3 @@ The project currently simulates data handling with JavaScript functions and does
 
 ## Other Information
 For further information, contributions, or issue reporting, please visit the [GitHub repository](https://github.com/yourusername/student-enrollment-form). Contributions are welcome, and feedback is appreciated to enhance the project's functionality and usability.
-
----
-
-Feel free to adapt this `README.md` to better fit any specific needs or updates to your project. If you need further customization or additional information, just let me know!
