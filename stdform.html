@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrollment Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            resetForm();
+
+            $("#rollNo").on("change", function() {
+                var rollNo = $(this).val().trim();
+                if (rollNo) {
+                    toggleFields(true);
+                    $("#saveBtn").prop("disabled", false);
+                    $("#updateBtn").prop("disabled", true);
+                    $("#resetBtn").prop("disabled", false);
+                } else {
+                    resetForm();
+                }
+            });
+        });
+
+        function toggleFields(enable) {
+            $("#enrollmentForm input:not(#rollNo)").prop("disabled", !enable);
+        }
+
+        function saveData() {
+            var formData = collectFormData();
+            if (formData) {
+                alert("Data collected: " + formData);
+                resetForm();
+            }
+        }
+
+        function updateData() {
+            var formData = collectFormData();
+            if (formData) {
+                alert("Data updated: " + formData);
+                resetForm();
+            }
+        }
+
+        function collectFormData() {
+            var rollNo = $("#rollNo").val().trim();
+            var fullName = $("#fullName").val().trim();
+            var className = $("#class").val().trim();
+            var birthDate = $("#birthDate").val().trim();
+            var address = $("#address").val().trim();
+            var enrollmentDate = $("#enrollmentDate").val().trim();
+
+            if (!rollNo || !fullName || !className || !birthDate || !address || !enrollmentDate) {
+                alert("All fields are required.");
+                return null;
+            }
+
+            return JSON.stringify({
+                rollNo: rollNo, fullName: fullName, class: className, birthDate: birthDate, address: address, enrollmentDate: enrollmentDate
+            });
+        }
+
+        function resetForm() {
+            $("#enrollmentForm")[0].reset();
+            toggleFields(false);
+            $("#rollNo").prop("disabled", false).focus();
+            $("#saveBtn").prop("disabled", true);
+            $("#updateBtn").prop("disabled", true);
+            $("#resetBtn").prop("disabled", true);
+        }
+
+        function saveStudent() {
+        var jsonStr = validateAndGetFormData();
+        if (jsonStr === "") {
+        return;
+        }
+        var putReqStr = createPUTRequest("90932174|-31949215139609204|90963896", jsonStr, "SAMPLE", "Student-Rel");
+        alert(putReqStr);
+        jQuery.ajaxSetup({async: false});
+        var resultObj = executeCommand(putReqStr, "http://api.login2explore.com:5577", "/api/iml");
+        alert(JSON.stringify(resultObj));
+        jQuery.ajaxSetup({async: true});
+
+        resetForm();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Enrollment Form</h2>
+        <form id="enrollmentForm" method="post">
+            <div class="form-group">
+                <label for="rollNo">Roll No:</label>
+                <input type="text" class="form-control" id="rollNo" name="rollNo" placeholder="Enter Roll No" required>
+            </div>
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter Full Name" disabled>
+            </div>
+            <div class="form-group">
+                <label for="class">Class:</label>
+                <input type="text" class="form-control" id="class" name="class" placeholder="Enter Class" disabled>
+            </div>
+            <div class="form-group">
+                <label for="birthDate">Birth Date:</label>
+                <input type="date" class="form-control" id="birthDate" name="birthDate" disabled>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address" disabled>
+            </div>
+            <div class="form-group">
+                <label for="enrollmentDate">Enrollment Date:</label>
+                <input type="date" class="form-control" id="enrollmentDate" name="enrollmentDate" disabled>
+            </div>
+            <input type="button" class="btn btn-primary" id="saveBtn" value="Save" onclick="saveData()" disabled>
+            <input type="button" class="btn btn-warning" id="updateBtn" value="Update" onclick="updateData()" disabled>
+            <input type="button" class="btn btn-default" id="resetBtn" value="Reset" onclick="resetForm()" disabled>
+        </form>
+    </div>
+</body>
+</html>
